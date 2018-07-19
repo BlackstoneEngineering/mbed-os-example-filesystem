@@ -18,10 +18,16 @@
 #include <errno.h>
 
 // Block devices
-#include "SPIFBlockDevice.h"
-#include "DataFlashBlockDevice.h"
-#include "SDBlockDevice.h"
-#include "HeapBlockDevice.h"
+// #include "SPIFBlockDevice.h"
+// #include "DataFlashBlockDevice.h"
+// #include "SDBlockDevice.h"
+// #include "HeapBlockDevice.h"
+
+#include "mbed-os/hal/qspi_api.h"
+#include "mbed-os/drivers/QSPI.h"
+#include "mbed-os/features/filesystem/bd/QSPIFBlockDevice.h"
+#define DEVICE_QSPI
+
 
 // File systems
 #include "LittleFileSystem.h"
@@ -29,11 +35,13 @@
 
 
 // Physical block device, can be any device that supports the BlockDevice API
-SPIFBlockDevice bd(
-        MBED_CONF_SPIF_DRIVER_SPI_MOSI,
-        MBED_CONF_SPIF_DRIVER_SPI_MISO,
-        MBED_CONF_SPIF_DRIVER_SPI_CLK,
-        MBED_CONF_SPIF_DRIVER_SPI_CS);
+// SPIFBlockDevice bd(
+//         MBED_CONF_SPIF_DRIVER_SPI_MOSI,
+//         MBED_CONF_SPIF_DRIVER_SPI_MISO,
+//         MBED_CONF_SPIF_DRIVER_SPI_CLK,
+//         MBED_CONF_SPIF_DRIVER_SPI_CS);
+
+QSPIFBlockDevice bd(PE_12, PE_13, PE_14, PE_15,PE_10,PE_11,0,8000000);
 
 // File system declaration
 LittleFileSystem fs("fs");
