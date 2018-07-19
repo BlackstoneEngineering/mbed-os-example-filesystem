@@ -44,7 +44,7 @@
 QSPIFBlockDevice bd(PE_12, PE_13, PE_14, PE_15,PE_10,PE_11,0,8000000);
 
 // File system declaration
-LittleFileSystem fs("fs");
+LittleFileSystem fs("sd", &bd);
 
 
 // Set up the button to trigger an erase
@@ -102,15 +102,15 @@ int main() {
     }
 
     // Open the numbers file
-    printf("Opening \"/fs/numbers.txt\"... ");
+    printf("Opening \"/sd/numbers.txt\"... ");
     fflush(stdout);
-    FILE *f = fopen("/fs/numbers.txt", "r+");
+    FILE *f = fopen("/sd/numbers.txt", "r+");
     printf("%s\n", (!f ? "Fail :(" : "OK"));
     if (!f) {
         // Create the numbers file if it doesn't exist
         printf("No file found, creating a new file... ");
         fflush(stdout);
-        f = fopen("/fs/numbers.txt", "w+");
+        f = fopen("/sd/numbers.txt", "w+");
         printf("%s\n", (!f ? "Fail :(" : "OK"));
         if (!f) {
             error("error: %s (%d)\n", strerror(errno), -errno);
@@ -161,7 +161,7 @@ int main() {
     printf("\rIncrementing numbers (%d/%d)... OK\n", 10, 10);
 
     // Close the file which also flushes any cached writes
-    printf("Closing \"/fs/numbers.txt\"... ");
+    printf("Closing \"/sd/numbers.txt\"... ");
     fflush(stdout);
     err = fclose(f);
     printf("%s\n", (err < 0 ? "Fail :(" : "OK"));
@@ -172,7 +172,7 @@ int main() {
     // Display the root directory
     printf("Opening the root directory... ");
     fflush(stdout);
-    DIR *d = opendir("/fs/");
+    DIR *d = opendir("/sd/");
     printf("%s\n", (!d ? "Fail :(" : "OK"));
     if (!d) {
         error("error: %s (%d)\n", strerror(errno), -errno);
@@ -197,9 +197,9 @@ int main() {
     }
 
     // Display the numbers file
-    printf("Opening \"/fs/numbers.txt\"... ");
+    printf("Opening \"/sd/numbers.txt\"... ");
     fflush(stdout);
-    f = fopen("/fs/numbers.txt", "r");
+    f = fopen("/sd/numbers.txt", "r");
     printf("%s\n", (!f ? "Fail :(" : "OK"));
     if (!f) {
         error("error: %s (%d)\n", strerror(errno), -errno);
@@ -211,7 +211,7 @@ int main() {
         printf("%c", c);
     }
 
-    printf("\rClosing \"/fs/numbers.txt\"... ");
+    printf("\rClosing \"/sd/numbers.txt\"... ");
     fflush(stdout);
     err = fclose(f);
     printf("%s\n", (err < 0 ? "Fail :(" : "OK"));
